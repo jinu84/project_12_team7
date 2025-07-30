@@ -1,7 +1,7 @@
 import streamlit as st  # ✅ 반드시 필요
 
 # 📂 사이드바 메뉴 구성
-menu = st.sidebar.radio("📂 메뉴 선택", ["💬 Chatbot", "📊 유사도 비교"])
+menu = st.sidebar.radio("📂 메뉴 선택", ["파일 업로드","💬 Chatbot", "📊 유사도 비교"])
 
 if menu == "💬 Chatbot":
     # 여기 안에 Chatbot 코드 전체 복사해서 넣기
@@ -190,14 +190,18 @@ if menu == "💬 Chatbot":
     selected_category = st.session_state.selected_category
     if selected_category and selected_category in category_to_products:
         st.subheader("🏷️ 해당 카테고리의 제품명")
-        selected_product = st.selectbox(
+
+        # 사용자가 선택할 수 있는 Selectbox
+        selected_product_value = st.selectbox(
             "제품명을 선택하세요",
             category_to_products[selected_category],
-            index=category_to_products[selected_category].index(st.session_state.selected_product)
-            if st.session_state.selected_product in category_to_products[selected_category]
-            else 0,
-            key="selected_product"  # 주의: key 설정 후 외부에서 이 값을 set하지 말 것
+            index=0
         )
+
+        # 선택 버튼을 누를 때만 session_state에 저장
+        if st.button("✅ 이 제품으로 질문하기"):
+            st.session_state.selected_product = selected_product_value
+            st.session_state.chat_history = []  # 초기화 필요시
 
 
     # 💬 챗봇 영역
